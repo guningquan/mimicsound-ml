@@ -1,0 +1,28 @@
+# Numerical
+numpy==1.26
+
+# Visualization / logging
+rerun-sdk==0.23.0
+
+# Video processing (this version may conflict with mujoco/dm-control; update with caution)
+
+# Misc utilities
+external
+pynput==1.6.1
+
+# PyTorch stack
+torchvision==0.23.0
+torch==2.8.0
+torchaudio==2.8.0
+
+# Data / file utilities
+h5py_cache
+
+# Robotics libraries
+modern_robotics
+mediapipe
+pyrealsense2
+# av==10.0.0
+
+transformers
+peft
