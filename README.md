@@ -38,7 +38,7 @@ This repository contains the human-robot audio–vision data collection, process
 
 ```
 git clone repo
-cd mimicsonic
+cd mimicsonic-ml
 conda env create -f environment.yaml
 source activate mimicsonic
 pip install -e external/robomimic
