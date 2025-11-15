@@ -189,3 +189,6 @@ Deploy the trained policy on your robotic platform.
 python mimicsonic/scripts/eval_real.py  \
     --eval-path  /Path/ckpt
 ```
+
+## 🙏 Acknowledgements
+   This project codebase is built based on [ALOHA](https://github.com/tonyzhaozh/aloha),  [ACT](https://github.com/tonyzhaozh/act), and [EgoMimic](https://github.com/SimarKareer/EgoMimic).
