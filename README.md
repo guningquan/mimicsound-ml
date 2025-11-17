@@ -41,6 +41,11 @@ git clone repo
 cd mimicsound-ml
 conda env create -f environment.yaml
 source activate mimicsound
+cd external
+git clone https://github.com/SimarKareer/robomimic.git
+cd robomimic
+git checkout a70b19a8a29bd4f9ee6374dbefc79b3344309c08
+cd ../..
 pip install -e external/robomimic
 pip install -e .
 conda install -n mimicsound -c conda-forge pyaudio portaudio av==10.0.0
