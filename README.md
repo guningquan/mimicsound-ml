@@ -64,7 +64,7 @@ git clone https://github.com/facebookresearch/sam2.git && cd sam2
 pip install -e .
 cd checkpoints && \
 ./download_ckpts.sh && \
-mv sam2_hiera_tiny.pt /path/to/mimicsound/resources/sam2_hiera_tiny.pt
+mv sam2.1_hiera_tiny.pt /path/to/mimicsound/resources/sam2.1_hiera_tiny.pt
 ```
 
 ## 📑 Dataset Collection
