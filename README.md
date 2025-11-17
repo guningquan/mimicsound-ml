@@ -1,21 +1,21 @@
-# MimicSonic: Learning Bimanual Manipulation from Audio-Visual Human Videos
+# MimicSound: Learning Bimanual Manipulation from Audio-Visual Human Videos
 
-This repository contains the human-robot audio–vision data collection, processing, and training code for MimicSonic.
+This repository contains the human-robot audio–vision data collection, processing, and training code for MimicSound.
 
 ---
 
 ## 📂 Repo Structure
-- **`mimicsonic/scripts/calibration_camera`**: Calibrates the extrinsic pose between the top-view camera and both robot arms.
+- **`mimicsound/scripts/calibration_camera`**: Calibrates the extrinsic pose between the top-view camera and both robot arms.
 
-- **`mimicsonic/scripts/aloha_process`**: Collects robot teleoperation datasets-including images, audio, and robot joint values-and processes raw ALOHA-style data into a RoboMimic-style HDF5 file compatible with training.
+- **`mimicsound/scripts/aloha_process`**: Collects robot teleoperation datasets-including images, audio, and robot joint values-and processes raw ALOHA-style data into a RoboMimic-style HDF5 file compatible with training.
 
-- **`mimicsonic/scripts/human_process`**: Collects human manipulation datasets and processes human vision-audio data into a RoboMimic-style HDF5 file compatible with training.
+- **`mimicsound/scripts/human_process`**: Collects human manipulation datasets and processes human vision-audio data into a RoboMimic-style HDF5 file compatible with training.
 
-- **`mimicsonic/algo`**: Contains algorithm implementations for MimicSonic.
+- **`mimicsound/algo`**: Contains algorithm implementations for MimicSound.
 
-- **`mimicsonic/configs`**: Provides training configurations for each task.
+- **`mimicsound/configs`**: Provides training configurations for each task.
 
-- **`mimicsonic/scripts/pl_train.py`**: Main training script powered by PyTorch Lightning (with DDP enabled).
+- **`mimicsound/scripts/pl_train.py`**: Main training script powered by PyTorch Lightning (with DDP enabled).
 
 
 ## 🏗️ Quick Start Guide
@@ -27,23 +27,23 @@ This repository contains the human-robot audio–vision data collection, process
 2. A USB microphone should be connected for receiving human instructions. We use the FIFINE K053 USB Lavalier Lapel Microphone, available at this [link](https://www.amazon.co.jp/-/en/gp/product/B077Y974JF/ref=ox_sc_act_title_1?smid=A17LS08GT0UYE7&psc=1). 
 3. You can check your microphone by running:
    ```
-   cd mimicsonic/scripts/aloha_process
+   cd mimicsound/scripts/aloha_process
    python aloha_scripts/audio_mic_test.py # Changing TARGET_DEVICE_NAME to test different mic.
    ```
    This will generate an audio file named "audio.wav".
 
 
 ## 🛠️ Environment Installation
-### MimicSonic Installation
+### MimicSound Installation
 
 ```
 git clone repo
-cd mimicsonic-ml
+cd mimicsound-ml
 conda env create -f environment.yaml
-source activate mimicsonic
+source activate mimicsound
 pip install -e external/robomimic
 pip install -e .
-conda install -n mimicsonic -c conda-forge pyaudio portaudio av==10.0.0
+conda install -n mimicsound -c conda-forge pyaudio portaudio av==10.0.0
 python external/robomimic/robomimic/scripts/setup_macros.py
 ```
 
@@ -54,12 +54,12 @@ Then go to  `external/robomimic/robomimic/macros_private.py` and manually add yo
 Processing hand and robot data relies on [SAM](https://github.com/facebookresearch/segment-anything-2) to generate masks for the hand and robot.
 
 ```
-cd outside of mimicsonic-ml
+cd outside of mimicsound-ml
 git clone https://github.com/facebookresearch/sam2.git && cd sam2
 pip install -e .
 cd checkpoints && \
 ./download_ckpts.sh && \
-mv sam2_hiera_tiny.pt /path/to/mimicsonic/resources/sam2_hiera_tiny.pt
+mv sam2_hiera_tiny.pt /path/to/mimicsound/resources/sam2_hiera_tiny.pt
 ```
 
 ## 📑 Dataset Collection
@@ -67,25 +67,25 @@ mv sam2_hiera_tiny.pt /path/to/mimicsonic/resources/sam2_hiera_tiny.pt
 ### Robot Dataset
 #### Robotic System Calibration
 
-To train MimicSonic on your own data you must provide the hand-eye-calibration extrinsics matrix inside [``mimicsonic/utils/mimicsonicUtils``](./mimicsonic/utils/mimicsonicUtils.py)
+To train MimicSound on your own data you must provide the hand-eye-calibration extrinsics matrix inside [``mimicsound/utils/mimicsoundUtils``](./mimicsound/utils/mimicsoundUtils.py)
 - Print a large april tag and tape it to the wrist camera mount
 - Collect calibration data for each arm one at a time.  Move the arm in many directions for best results.  This will generate hdf5. We use the left arm as an example.
 
 ```
-python mimicsonic/scripts/aloha_process/aloha_scripts/record_episodes_plus.py --task_name CALIBRATE_LEFT --start_idx 0 --end_idx 0 
+python mimicsound/scripts/aloha_process/aloha_scripts/record_episodes_plus.py --task_name CALIBRATE_LEFT --start_idx 0 --end_idx 0 
 
-python mimicsonic/scripts/calibrate_camera/aloha_to_robomimic_calibrate.py  --dataset /Path/CALIBRATE_LEFT  --arm left --out /Path/calibration_left.hdf5  --data-type robot
+python mimicsound/scripts/calibrate_camera/aloha_to_robomimic_calibrate.py  --dataset /Path/CALIBRATE_LEFT  --arm left --out /Path/calibration_left.hdf5  --data-type robot
 
-python mimicsonic/scripts/calibrate_camera/calibrate_realsense.py --h5py-path /Path/calibration_left.hdf5
+python mimicsound/scripts/calibrate_camera/calibrate_realsense.py --h5py-path /Path/calibration_left.hdf5
 
 ```
-Paste this matrix into [``mimicsonic/utils/mimicsonicUtils``](./mimicsonic/utils/mimicsonicUtils.py) for the appropriate arm.
+Paste this matrix into [``mimicsound/utils/mimicsoundUtils``](./mimicsound/utils/mimicsoundUtils.py) for the appropriate arm.
 
 #### Robot Data Collection and Processing for Training
 **Collect Robot Demos**
 Run the following command, and use M to mark key frames. Press E to end the current teleoperation once the task is completed.
 ```
- python mimicsonic/scripts/aloha_process/aloha_scripts/record_episodes_plus.py  --task_name TASK_NAME  --start_idx 0 --end_idx 10
+ python mimicsound/scripts/aloha_process/aloha_scripts/record_episodes_plus.py  --task_name TASK_NAME  --start_idx 0 --end_idx 10
 ```
 We utilize human teleoperation to collect demonstration data. During each task's data collection, information is recorded at each timestep within an episode. Specifically, each timestep includes the current robot joint values, images from the active cameras (top-view, right arm, left arm), and the corresponding audio segment captured at that timestep, which are compressed and saved as HDF5 files. The structure of the dataset is illustrated in the following structure tree:
 ```
@@ -127,10 +127,10 @@ This design facilitates efficient retrieval of the audio data for each timestep 
 
 To process the demos we've recorded we run.  Here's an example command
 ```
-python mimicsonic/scripts/aloha_process/aloha_to_robomimic.py \
+python mimicsound/scripts/aloha_process/aloha_to_robomimic.py \
     --dataset /Path/AlohaData/TASK  \
     --arm both  \
-    --out /mimicsonic/TASK.hdf5 \
+    --out /mimicsound/TASK.hdf5 \
     --extrinsics rsOct10 \
     --prestack \
     --enable_audio \
@@ -144,12 +144,12 @@ python mimicsonic/scripts/aloha_process/aloha_to_robomimic.py \
 **Human Data Collection**
 Using the commend to collect human manipulation. 
 'b': Start recording,'e': Stop recording and save, 'm': Mark timestep (during 
-```python mimicsonic/scripts/human_process/record_hand_rs_plus.py --output_dir /Path/HumanData/TASK  --start_idx 0 --end_idx 40```
+```python mimicsound/scripts/human_process/record_hand_rs_plus.py --output_dir /Path/HumanData/TASK  --start_idx 0 --end_idx 40```
 
 **Human Data Procesing**
 1. Compute the speed ratio between human and robot. This will output the analyzed speed ratios for different phases of the task and will be used for the subsequent human data generation.
 ```
-python mimicsonic/scripts/analyze_robot_human_speed.py \
+python mimicsound/scripts/analyze_robot_human_speed.py \
         --human_dir /PATH/Human \
         --robot_dir /PATH/Robot \
         --expected_segs 3 \
@@ -157,9 +157,9 @@ python mimicsonic/scripts/analyze_robot_human_speed.py \
 ```
 2. Convert the human data into robomimic data format:
 ```
-python mimicsonic/scripts/realsense_process/realsense_to_robomimic.py \
+python mimicsound/scripts/realsense_process/realsense_to_robomimic.py \
     --input_dir /Path/HumanData/TASK \
-    --output /Path/HumanMimicsonic/TASK.hdf5 \
+    --output /Path/HumanMimicsound/TASK.hdf5 \
     --hand bimanual \
     --enable_audio \
     --audio_length 4.0 \
@@ -172,11 +172,11 @@ python mimicsonic/scripts/realsense_process/realsense_to_robomimic.py \
 ```
 
 ## 🧠 **Policy Training**  
-1. Configure your settings in mimic/configs/mimicsonic.json.
+1. Configure your settings in mimic/configs/mimicsound.json.
 2. Traing your policy:
 ```
-python  mimicsonic/scripts/pl_train.py \
-    --config configs/mimicsonic.json
+python  mimicsound/scripts/pl_train.py \
+    --config configs/mimicsound.json
     --dataset /Path/TASK_robot.hdf5 \
     --dataset_2 /Path/TASK_human.hdf5 \
 ```
@@ -186,7 +186,7 @@ python  mimicsonic/scripts/pl_train.py \
 Deploy the trained policy on your robotic platform.
 
 ```
-python mimicsonic/scripts/eval_real.py  \
+python mimicsound/scripts/eval_real.py  \
     --eval-path  /Path/ckpt
 ```
 

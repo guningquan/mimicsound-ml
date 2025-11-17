@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/mimicsonic-ml.iml" filepath="$PROJECT_DIR$/.idea/mimicsonic-ml.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mimicsound-ml.iml" filepath="$PROJECT_DIR$/.idea/mimicsound-ml.iml" />
     </modules>
   </component>
 </project>
