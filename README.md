@@ -139,7 +139,7 @@ python mimicsound/scripts/aloha_process/aloha_to_robomimic.py \
     --extrinsics rsOct10 \
     --prestack \
     --enable_audio \
-    --audio_length 4.0 \
+    --audio_length 3.0 \
     --target_sampling_rate 16000  \
     --val_ratio 0.2
 ```
@@ -167,7 +167,7 @@ python mimicsound/scripts/realsense_process/realsense_to_robomimic.py \
     --output /Path/HumanMimicsound/TASK.hdf5 \
     --hand bimanual \
     --enable_audio \
-    --audio_length 4.0 \
+    --audio_length 3.0 \
     --target_sampling_rate 16000 \
     --split \
     --enable_dynamic_speed \
