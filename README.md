@@ -172,7 +172,7 @@ python mimicsound/scripts/realsense_process/realsense_to_robomimic.py \
     --split \
     --enable_dynamic_speed \
     --seg_speed_ratios x x x \  # The values from analyze_robot_human_speed.py
-    --val_ratio 0.5 \
+    --val_ratio 0.2 \
     --augment /recorded/robot_audio_noise.wav
 ```
 
